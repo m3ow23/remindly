@@ -4,6 +4,8 @@ body {
     align-items: center;
     height: 95vh;
     flex-direction: column;
+    background-color: #A7C7E7;
+    transition: background-color 0.3s ease;
 }
 
 h1 {
@@ -12,21 +14,57 @@ h1 {
 }
 
 p {
+    font-size: 1.125em;
     margin-bottom: .25em;
 }
 
 textarea {
-    height: 8em;
-    border: 1px solid black;
+    height: 20em;
+    border: 2px solid black;
+    background-color: #A7C7E7;
+    border-radius: .75em;
+    width: 14em;
+    padding: 1em;
+    transition: border 0.3s ease, background-color 0.3s ease;
+    outline: none;
+    resize: none;
+}
+
+input {
+    border: 2px solid black;
+    background-color: #A7C7E7;
+    border-radius: .75em;
+    width: 14em;
+    padding: 1em;
+    transition: border 0.3s ease, background-color 0.3s ease;
+    outline: none;
 }
 
 button {
     margin-top: 1em;
-    margin-left: 9.325em;
-    background-color: white;
-    border: 1px solid black;
+    margin-left: 11.75em;
+    background-color: #A7C7E7;
+    border: 2px solid black;
+    padding: .75em 1em;
+    border-radius: .75em;
+    cursor: pointer;
+    transition: border 0.3s ease, background-color 0.3s ease;
 }
 
-input {
-    border: 1px solid black;
+textarea:hover,
+textarea:focus,
+input:hover,
+input:focus,
+button:hover {
+    border: 2px solid white;
+}
+
+/* Hide the increment and decrement buttons */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
 }

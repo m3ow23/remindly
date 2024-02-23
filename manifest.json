@@ -1,18 +1,24 @@
 { 
     "manifest_version": 3, 
     "name": "Remindly", 
-    "description": "A simple extension that reminds you every n minutes for specified websites.", 
-    "version": "1", 
+    "description": "A simple website usage reminder for a better productivity.", 
+    "version": "1.1.0", 
     "author": "Nathanael Memis",
     "background": {
         "service_worker": "background.js"
     },
+    "action": {
+        "default_popup": "popup.html"
+    },
     "options_page": "options.html",
+    "icons": {
+        "128": "icon128.png"
+    },
     "content_scripts": [
         {
             "matches": ["*://*/*"],
             "js": ["content.js"]
         }
     ],
-    "permissions": ["storage", "tabs"]
+    "permissions": ["storage", "tabs", "options"]
 }
