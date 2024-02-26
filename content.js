@@ -1,13 +1,15 @@
-// const url = window.location.href.replace(/(https?:\/\/)?(www\.)?/, '');
 const url = window.location.href;
 
-// onload send url to background.js
-const onloadMessage = { 
-    action:"newTab", 
-    url: url 
-}
-
 function handleOnloadReponse(response) {
+    // work around to wake up sleeping listener of background.js after reopening browser
+    if (response === undefined) {
+        setTimeout(
+            chrome.runtime.sendMessage(onloadMessage, handleOnloadReponse),
+            1000
+        )
+        return
+    }
+
     if (response.isWebsiteOnList) {
         // timer element
         const backdropBlur = document.createElement("div");
@@ -138,4 +140,9 @@ function handleOnloadReponse(response) {
     }
 }
 
+// onload send url to background.js
+const onloadMessage = { 
+    action:"newTab", 
+    url: url 
+}
 chrome.runtime.sendMessage(onloadMessage, handleOnloadReponse);

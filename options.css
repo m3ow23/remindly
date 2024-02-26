@@ -13,6 +13,21 @@ h1 {
     margin-bottom: 0;
 }
 
+.container {
+    display: flex;
+}
+
+.container .leftColumn,
+.container .rightColumn {
+    padding: 2em;
+    text-align: center;
+}
+
+.container .rightColumn {
+    padding-top: 6em;
+    padding-left: 0;
+}
+
 p {
     font-size: 1.125em;
     margin-bottom: .25em;
@@ -30,25 +45,49 @@ textarea {
     resize: none;
 }
 
+.remindInterval {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2em;
+}
+
+.remindInterval p {
+    margin: 0;
+}
+
+.resetInterval {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.resetInterval p {
+    margin: 0;
+}
+
 input {
+    margin: 0 .25em;
+    text-align: center;
     border: 2px solid black;
     background-color: #A7C7E7;
     border-radius: .75em;
-    width: 14em;
+    width: 2em;
     padding: 1em;
     transition: border 0.3s ease, background-color 0.3s ease;
     outline: none;
 }
 
 button {
-    margin-top: 1em;
-    margin-left: 11.75em;
+    margin-top: 3.5em;
+    margin-left: 9em;
     background-color: #A7C7E7;
     border: 2px solid black;
     padding: .75em 1em;
     border-radius: .75em;
     cursor: pointer;
     transition: border 0.3s ease, background-color 0.3s ease;
+    width: 6em;
 }
 
 textarea:hover,

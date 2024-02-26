@@ -1,26 +1,61 @@
-let websites = undefined
-let remindSeconds = undefined
+// defaults values
+// these values needs to be global
+let websites = "facebook.com\nyoutube.com\ntwitch.tv"
+let remindInterval = 300 // 5 minutes
 
-chrome.storage.local.get(["websites", "remindSeconds"], function (result) {
-    websites = result.websites.split("\n");
-    remindSeconds = result.remindSeconds;
-
+chrome.storage.local.get(["websites", "timeTable", "remindInterval", "resetInterval", "lastUpdateTimestamp"], function (result) {
+    // defaults values
     let timeTable = {}
+    let lastUpdateTimestamp = new Date()
+    let resetInterval = 3600 // 1 hours
 
-    // check if website is on user-specified list
+    // reset all time in timeTable to 0
+    function resetTimeTable() {
+        for (const key in timeTable) {
+            timeTable[key].time = 0
+        }
+    }
+
+    let localStorageData = {}
+
+    // helper function to set default values if not found in result
+    function setDefaultIfUndefined(key, defaultValue) {
+        if (result[key] !== undefined) {
+            return result[key];
+        }
+
+        localStorageData[key] = defaultValue;
+        return defaultValue
+    }
+
+    // set default values or retrieve from result
+    websites = setDefaultIfUndefined("websites", websites);
+    timeTable = JSON.parse(setDefaultIfUndefined("timeTable", JSON.stringify(timeTable)));
+    remindInterval = setDefaultIfUndefined("remindInterval", remindInterval);
+    resetInterval = setDefaultIfUndefined("resetInterval", resetInterval);
+    lastUpdateTimestamp = new Date(setDefaultIfUndefined("lastUpdateTimestamp", lastUpdateTimestamp.toISOString()));
+
+    // update timeTable if needed based on lastUpdateTimestamp
+    const elapsedTimeMilliseconds = new Date().getTime() - new Date(lastUpdateTimestamp).getTime();
+    if (elapsedTimeMilliseconds >= resetInterval * 1000) {
+        resetTimeTable();
+    }
+
+    // update localStorageData if needed
+    if (Object.keys(localStorageData).length !== 0) {
+        chrome.storage.local.set(localStorageData)
+    }
+
+    // remove protocols such as http, https, and www
     function parseUrlInWebsiteList(url) {
-        for (const website of websites) {
+        for (const website of websites.split("\n")) {
             if (url.includes(website)) {
+
                 return website
             }
         }
 
         return undefined
-    }
-
-    // check if website is on user-specified list
-    function isWebsiteOnList(url) {
-        return parseUrlInWebsiteList(url) ? true : false
     }
 
     setInterval(function () {
@@ -32,6 +67,12 @@ chrome.storage.local.get(["websites", "remindSeconds"], function (result) {
         // send time table to all tabs
         chrome.tabs.query({}, function (tabs) {
             function handleReponse(response) {
+                // check if there is valid response
+                // websites respond even while loading returning an undefined response
+                if (response == undefined) {
+                    return
+                }
+
                 const parsedUrl = parseUrlInWebsiteList(response.url)
 
                 // same tab domain already responded
@@ -41,6 +82,19 @@ chrome.storage.local.get(["websites", "remindSeconds"], function (result) {
 
                 timeTable[parsedUrl].time += 1
                 timeTable[parsedUrl].responded = true
+
+                // reset timeTable if elapsedTime is beyond reset interval
+                const elapsedTimeMilliseconds = new Date().getTime() - lastUpdateTimestamp.getTime();
+                if (elapsedTimeMilliseconds >= resetInterval * 1000) {
+                    resetTimeTable()
+                } 
+
+                // update timeTable and lastUpdateTimeStamp in local storage
+                lastUpdateTimestamp = new Date()
+                chrome.storage.local.set({ 
+                    "timeTable": JSON.stringify(timeTable),
+                    "lastUpdateTimestamp": lastUpdateTimestamp.toISOString()
+                });
             }
 
             for (let i = 0; i < tabs.length; i++) {
@@ -52,9 +106,9 @@ chrome.storage.local.get(["websites", "remindSeconds"], function (result) {
                 }
 
                 if (parsedUrl != undefined) {
-                    message = {
+                    const message = {
                         time: timeTable[parsedUrl].time,
-                        remindSeconds: remindSeconds
+                        remindInterval: remindInterval
                     }
 
                     chrome.tabs.sendMessage(tabs[i].id, message, handleReponse);
@@ -65,6 +119,12 @@ chrome.storage.local.get(["websites", "remindSeconds"], function (result) {
 
     // new tab and data update listener
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        // check if website is on user-specified list
+        function isWebsiteOnList(url) {
+
+            return parseUrlInWebsiteList(url) ? true : false
+        }
+
         function handleCheckWebsiteInTimeTable(url) {
             const parsedUrl = parseUrlInWebsiteList(url)
 
@@ -91,7 +151,7 @@ chrome.storage.local.get(["websites", "remindSeconds"], function (result) {
             }
         } else if (message.action == "dataUpdate") {
             websites = message.websites.split("\n")
-            remindSeconds = message.remindSeconds
+            remindInterval = message.remindInterval
 
             sendResponse({
                 status: "successful"

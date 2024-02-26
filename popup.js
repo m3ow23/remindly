@@ -1,4 +1,4 @@
 const buttonElement = document.querySelector("button")
 buttonElement.addEventListener("click", function() {
-    chrome.runtime.openOptionsPage()
+    chrome.tabs.create({ url: "options.html" })
 })

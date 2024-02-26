@@ -8,11 +8,31 @@
 </head>
 <body>
     <h1>Remindly</h1>
-    <p>Websites:</p>
-    <textarea id="websites"></textarea>
-    <p>Remind every (seconds):</p>
-    <input id="remindSeconds" type="number" min="0"></input>  
-    <button id="saveButton">Save</button>     
+    <div class="container">
+        <div class="leftColumn">
+            <p>Websites/Keywords:</p>
+            <textarea id="websites"></textarea>
+        </div>
+        <div class="rightColumn">
+            <p>Remind every (hh:mm:ss)</p>
+            <div class="remindInterval">
+                <input id="remindIntervalHours" value="00"></input>  
+                <p>:</p>
+                <input id="remindIntervalMinutes" value="00"></input> 
+                <p>:</p> 
+                <input id="remindIntervalSeconds" value="00"></input>  
+            </div>
+            <p>Reset timer every (hh:mm:ss)</p>
+            <div class="resetInterval">
+                <input id="resetIntervalHours" value="00"></input>  
+                <p>:</p>
+                <input id="resetIntervalMinutes" value="00"></input> 
+                <p>:</p> 
+                <input id="resetIntervalSeconds" value="00"></input>  
+            </div>
+            <button id="saveButton">Save</button> 
+        </div>    
+    </div>
     <script type="module" src="options.js"></script>
 </body>
 </html>
