@@ -21,5 +21,5 @@
             "js": ["content.js"]
         }
     ],
-    "permissions": ["storage", "tabs"]
+    "permissions": ["storage", "activeTab"]
 }

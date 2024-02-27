@@ -111,20 +111,25 @@ function handleOnloadReponse(response) {
 
         // time update and respond with url
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            // send URL as reponse to let background.js that tab is opened 
-            sendResponse({
-                url: url
-            })
+            if (message.action == "getUrl") {
+                sendResponse({
+                    url: url
+                })
+            } else if (message.action == "updateTime") {
+                const hours = Math.floor(message.time / (60 * 60)).toString().padStart(2, '0');
+                const minutes = Math.floor((message.time % (60 * 60)) / (60)).toString().padStart(2, '0');
+                const seconds = Math.floor((message.time % (60))).toString().padStart(2, '0');
 
-            const hours = Math.floor(message.time / (60 * 60)).toString().padStart(2, '0');
-            const minutes = Math.floor((message.time % (60 * 60)) / (60)).toString().padStart(2, '0');
-            const seconds = Math.floor((message.time % (60))).toString().padStart(2, '0');
+                timer.innerHTML = `${hours}:${minutes}:${seconds}`;
 
-            timer.innerHTML = `${hours}:${minutes}:${seconds}`;
+                if ((Math.floor(message.time) % message.remindInterval) == 0 
+                        && message.time != 0) {
+                    remindUser()
+                }
 
-            if ((Math.floor(message.time) % message.remindInterval) == 0 
-                    && message.time != 0) {
-                remindUser()
+                sendResponse({
+                    status: "successful"
+                })
             }
         });
 

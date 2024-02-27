@@ -66,14 +66,15 @@ chrome.storage.local.get(["websites", "timeTable", "remindInterval", "resetInter
 
         // send time table to all tabs
         chrome.tabs.query({active: true}, function (tabs) {
-            function handleReponse(response) {
-                // check if there is valid response
-                // websites respond even while loading returning an undefined response
+            function handleSecondResponse(response, parsedUrl) {
+                // if for some reason the tab wasn't able to respond, tag it as inactive
                 if (response == undefined) {
                     return
                 }
 
-                const parsedUrl = parseUrlInWebsiteList(response.url)
+                if (response.status !== "successful") {
+                    return
+                }
 
                 // same tab domain already responded
                 if (timeTable[parsedUrl].responded == true) {
@@ -97,22 +98,35 @@ chrome.storage.local.get(["websites", "timeTable", "remindInterval", "resetInter
                 });
             }
 
+            function handleFirstReponse(response, tabId) {
+                // check if there is valid response
+                // websites respond even while loading returning an undefined response
+                if (response == undefined) {
+                    return
+                }
+
+                const parsedUrl = parseUrlInWebsiteList(response.url)
+
+                const message = {
+                    action: "updateTime",
+                    time: timeTable[parsedUrl].time,
+                    remindInterval: remindInterval
+                }
+
+                chrome.tabs.sendMessage(tabId, message, function(response) {
+                    handleSecondResponse(response, parsedUrl)
+                });
+            }
+
+            // iterate through multiple active tabs, ex. split screen of tabs
             for (let i = 0; i < tabs.length; i++) {
-                const parsedUrl = parseUrlInWebsiteList(tabs[i].url)
-
-                // skip tab if not included in timeTable
-                if (timeTable[parsedUrl] == undefined) {
-                    continue
+                const message = {
+                    action: "getUrl"
                 }
-
-                if (parsedUrl != undefined) {
-                    const message = {
-                        time: timeTable[parsedUrl].time,
-                        remindInterval: remindInterval
-                    }
-
-                    chrome.tabs.sendMessage(tabs[i].id, message, handleReponse);
-                }
+    
+                chrome.tabs.sendMessage(tabs[i].id, message, function(response) {
+                    handleFirstReponse(response, tabs[i].id)
+                });
             }
         });
     }, 1000)
