@@ -65,7 +65,7 @@ chrome.storage.local.get(["websites", "timeTable", "remindInterval", "resetInter
         }
 
         // send time table to all tabs
-        chrome.tabs.query({}, function (tabs) {
+        chrome.tabs.query({active: true}, function (tabs) {
             function handleReponse(response) {
                 // check if there is valid response
                 // websites respond even while loading returning an undefined response
@@ -150,8 +150,9 @@ chrome.storage.local.get(["websites", "timeTable", "remindInterval", "resetInter
                 })
             }
         } else if (message.action == "dataUpdate") {
-            websites = message.websites.split("\n")
+            websites = message.websites
             remindInterval = message.remindInterval
+            resetInterval = message.resetInterval
 
             sendResponse({
                 status: "successful"

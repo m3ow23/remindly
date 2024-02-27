@@ -53,7 +53,7 @@ saveButton.addEventListener("click", () => {
     const message = { 
         action:"dataUpdate", 
         websites: websitesTextAreaElement.value, 
-        remindSeconds: remindInterval,
+        remindInterval: remindInterval,
         resetInterval: resetInterval
     }
 
@@ -91,8 +91,6 @@ saveButton.addEventListener("click", () => {
 
 // get content for textarea and input
 chrome.storage.local.get(["websites", "remindInterval", "resetInterval"], function(result) {
-    const websites = result.websites;
-
     websitesTextAreaElement.value = result.websites
 
     // time splitting to hr:mm:ss

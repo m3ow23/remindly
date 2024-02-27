@@ -1,5 +1,11 @@
 const url = window.location.href;
 
+// onload send url to background.js
+const onloadMessage = { 
+    action:"newTab", 
+    url: url 
+}
+
 function handleOnloadReponse(response) {
     // work around to wake up sleeping listener of background.js after reopening browser
     if (response === undefined) {
@@ -116,7 +122,7 @@ function handleOnloadReponse(response) {
 
             timer.innerHTML = `${hours}:${minutes}:${seconds}`;
 
-            if ((Math.floor(message.time) % message.remindSeconds) == 0 
+            if ((Math.floor(message.time) % message.remindInterval) == 0 
                     && message.time != 0) {
                 remindUser()
             }
@@ -140,9 +146,4 @@ function handleOnloadReponse(response) {
     }
 }
 
-// onload send url to background.js
-const onloadMessage = { 
-    action:"newTab", 
-    url: url 
-}
 chrome.runtime.sendMessage(onloadMessage, handleOnloadReponse);
