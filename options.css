@@ -1,39 +1,74 @@
 body {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 95vh;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
+    height: 95vh;
     background-color: #A7C7E7;
     transition: background-color 0.3s ease;
+    font-family: sans-serif;
 }
 
-h1 {
-    margin-top: 0;
+.title {
+    margin-top: 1em;
     margin-bottom: 0;
+    font-size: 4em;
 }
 
-.container {
+
+/* Navbar */
+nav {
+    width: 35em;
+    margin-top: 2em;
+}
+
+nav button {
+    margin: 0;
+    border: 0;
+    background-color: #A7C7E7;
+    cursor: pointer;
+    font-size: 1.125em;
+    border-radius: .5em .5em 0 0;
+    padding: .5em 1.5em .5em 1.5em;
+    transition: all 0.3s ease;
+}
+
+nav button:hover,
+nav .selected {
+    background-color: black !important;
+    color: white;
+}
+
+hr {
+    border: .25px solid black;
+    margin: 0;
+}
+
+
+/* Settings Card */
+.settings {
     display: flex;
+    justify-content: center;
+    transition: all 0.3s ease;
 }
 
-.container .leftColumn,
-.container .rightColumn {
+.settings .leftColumn,
+.settings .rightColumn {
     padding: 2em;
     text-align: center;
 }
 
-.container .rightColumn {
+.settings .rightColumn {
     padding-top: 6em;
     padding-left: 0;
 }
 
-p {
+.settings p {
     font-size: 1.125em;
     margin-bottom: .25em;
 }
 
-textarea {
+.settings textarea {
     height: 20em;
     border: 2px solid black;
     background-color: #A7C7E7;
@@ -66,7 +101,7 @@ textarea {
     margin: 0;
 }
 
-input {
+.settings input {
     margin: 0 .25em;
     text-align: center;
     border: 2px solid black;
@@ -78,7 +113,7 @@ input {
     outline: none;
 }
 
-button {
+#saveButton {
     margin-top: 3.5em;
     margin-left: 9em;
     background-color: #A7C7E7;
@@ -90,20 +125,20 @@ button {
     width: 6em;
 }
 
-textarea:hover,
-textarea:focus,
-input:hover,
-input:focus,
-button:hover {
+.settings textarea:hover,
+.settings textarea:focus,
+.settings input:hover,
+.settings input:focus,
+#saveButton:hover {
     border: 2px solid white;
 }
 
-/* Hide the increment and decrement buttons */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-input[type="number"] {
-    -moz-appearance: textfield;
+
+/* About Card */
+.about {
+    display: none;
+    font-size: 1.125em;
+    margin-top: 1.75em;
+    width: 30em;
+    transition: all 0.3s ease;
 }

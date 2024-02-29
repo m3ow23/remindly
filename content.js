@@ -3,7 +3,7 @@ const url = window.location.href;
 // onload send url to background.js
 const onloadMessage = { 
     action:"newTab", 
-    url: url 
+    url: url,
 }
 
 function handleOnloadReponse(response) {

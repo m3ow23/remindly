@@ -16,6 +16,15 @@ chrome.storage.local.get(["websites", "timeTable", "remindInterval", "resetInter
         }
     }
 
+    // update timeTable and lastUpdateTimeStamp in local storage
+    function updateTimeTableAndLastUpdateTimestamp() {
+        lastUpdateTimestamp = new Date()
+        chrome.storage.local.set({ 
+            "timeTable": JSON.stringify(timeTable),
+            "lastUpdateTimestamp": lastUpdateTimestamp.toISOString()
+        });
+    }
+
     let localStorageData = {}
 
     // helper function to set default values if not found in result
@@ -39,6 +48,7 @@ chrome.storage.local.get(["websites", "timeTable", "remindInterval", "resetInter
     const elapsedTimeMilliseconds = new Date().getTime() - new Date(lastUpdateTimestamp).getTime();
     if (elapsedTimeMilliseconds >= resetInterval * 1000) {
         resetTimeTable();
+        updateTimeTableAndLastUpdateTimestamp();
     }
 
     // update localStorageData if needed
@@ -84,18 +94,7 @@ chrome.storage.local.get(["websites", "timeTable", "remindInterval", "resetInter
                 timeTable[parsedUrl].time += 1
                 timeTable[parsedUrl].responded = true
 
-                // reset timeTable if elapsedTime is beyond reset interval
-                const elapsedTimeMilliseconds = new Date().getTime() - lastUpdateTimestamp.getTime();
-                if (elapsedTimeMilliseconds >= resetInterval * 1000) {
-                    resetTimeTable()
-                } 
-
-                // update timeTable and lastUpdateTimeStamp in local storage
-                lastUpdateTimestamp = new Date()
-                chrome.storage.local.set({ 
-                    "timeTable": JSON.stringify(timeTable),
-                    "lastUpdateTimestamp": lastUpdateTimestamp.toISOString()
-                });
+                updateTimeTableAndLastUpdateTimestamp()
             }
 
             function handleFirstReponse(response, tabId) {
@@ -104,6 +103,14 @@ chrome.storage.local.get(["websites", "timeTable", "remindInterval", "resetInter
                 if (response == undefined) {
                     return
                 }
+
+                // reset timeTable if elapsedTime is beyond reset interval
+                const elapsedTimeMilliseconds = new Date().getTime() - lastUpdateTimestamp.getTime();
+                if (elapsedTimeMilliseconds >= resetInterval * 1000) {
+                    resetTimeTable()
+                    updateTimeTableAndLastUpdateTimestamp()
+                    return
+                } 
 
                 const parsedUrl = parseUrlInWebsiteList(response.url)
 

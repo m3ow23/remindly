@@ -3,12 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Remindly</title>
     <link rel="stylesheet" href="options.css">
 </head>
 <body>
-    <h1>Remindly</h1>
-    <div class="container">
+    <p class="title">Remindly</p>
+    <nav>
+        <button class="selected" id="settingsButton">Settings</button>
+        <button id="aboutButton">About</button>
+        <hr></hr>
+    </nav>
+    <div class="settings" id="settingsCard">
         <div class="leftColumn">
             <p>Websites/Keywords:</p>
             <textarea id="websites"></textarea>
@@ -32,6 +37,27 @@
             </div>
             <button id="saveButton">Save</button> 
         </div>    
+    </div>
+    <div class="about" id="aboutCard">
+        <p>
+            Seeking a gentler browser productivity tool?
+            Remindly is a simple website usage reminder for a better productivity.
+        </p>
+        <p>
+            Most website usage tools forcibly close your tabs when the timer runs out.
+            Remindly on the other hand gently reminds you of your website usage depending on the remind interval you've set.
+        </p>
+        <p>
+            The extension allows you to continue using your defined apps whenever you truly need them and reminds you when not.
+            This extension is designed for people who have enough self-discipline to control their usage when reminded.
+        </p>
+        <p>
+            Alternatively, if you lack self-discipline, stricter website usage management extensions may be more suitable. 
+            A personally tested and effective extension, is LeechBlock NG by James Anderson.
+        </p>
+        <p>
+            This browser extension is a hobby project by Nathanael Memis. Feel free to contact me at <a href="mailto:nathanaelmemis@gmail.com">nathanaelmemis@gmail.com</a>.
+        </p>
     </div>
     <script type="module" src="options.js"></script>
 </body>

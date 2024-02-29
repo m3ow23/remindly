@@ -1,3 +1,25 @@
+// NAVBAR
+const settingsButtonElement = document.getElementById("settingsButton");
+const aboutButtonElement = document.getElementById("aboutButton");
+const settingsCardElement = document.getElementById("settingsCard");
+const aboutCardElement = document.getElementById("aboutCard");
+
+settingsButtonElement.addEventListener("click", function() {
+    settingsButtonElement.classList.add("selected");
+    aboutButtonElement.classList.remove("selected");
+    settingsCardElement.style.display = "flex"
+    aboutCardElement.style.display = "none"
+})
+
+aboutButtonElement.addEventListener("click", function() {
+    aboutButtonElement.classList.add("selected");
+    settingsButtonElement.classList.remove("selected");
+    settingsCardElement.style.display = "none"
+    aboutCardElement.style.display = "block"
+})
+
+// SETTINGS
+
 // colors
 const green = "rgb(77, 237, 77)"
 const red = "rgb(234, 88, 88)"
@@ -59,6 +81,10 @@ saveButton.addEventListener("click", () => {
 
     function setElementsBackground(color) {
         body.style.background = color
+
+        settingsButtonElement.style.background = color
+        aboutButtonElement.style.background = color
+
         websitesTextAreaElement.style.background = color
 
         remindIntervalHoursElement.style.background = color
